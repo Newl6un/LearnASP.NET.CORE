@@ -31,6 +31,7 @@ namespace Presentation.Controllers
         {
             var employee = _service.EmployeeService.GetEmployee(companyId, id,
             trackChanges: false);
+
             return Ok(employee);
         }
     }
