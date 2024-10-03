@@ -1,6 +1,9 @@
 ﻿using Contracts;
 using LoggerService;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Repository;
 using Service;
 using Service.Contracts;
@@ -37,5 +40,16 @@ namespace CompanyEmployees.Extensions
 
         public static IMvcBuilder AddCustomCSVFormatter(this IMvcBuilder builder)
             => builder.AddMvcOptions(config => config.OutputFormatters.Add(new OutputFormatter()));
+
+        public static NewtonsoftJsonPatchInputFormatter GetJsonPatchInputFormatter(this IServiceCollection services)
+            => new ServiceCollection().AddLogging()
+                .AddMvc().AddNewtonsoftJson()
+                    .Services.BuildServiceProvider()
+                    .GetRequiredService<IOptions<MvcOptions>>().Value.InputFormatters
+                    .OfType<NewtonsoftJsonPatchInputFormatter>().First();
+
+
+
+
     }
 }
