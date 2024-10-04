@@ -9,6 +9,7 @@ using Service;
 using Service.Contracts;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Presentation.Controllers;
+using Marvin.Cache.Headers;
 
 namespace CompanyEmployees.Extensions
 {
@@ -87,5 +88,19 @@ namespace CompanyEmployees.Extensions
                     opt.Conventions.Controller<CompaniesV2Controller>().HasDeprecatedApiVersion(new ApiVersion(2, 0));
                 });
 
+        public static void ConfigureResponseCaching(this IServiceCollection services)
+            => services.AddResponseCaching();
+
+        public static void ConfigureHttpCacheHeaders(this IServiceCollection services)
+            => services.AddHttpCacheHeaders(
+                expirationOpt =>
+                {
+                    expirationOpt.MaxAge = 65;
+                    expirationOpt.CacheLocation = CacheLocation.Private;
+                },
+                validateionOpt =>
+                {
+                    validateionOpt.MustRevalidate = true;
+                });
     }
 }
