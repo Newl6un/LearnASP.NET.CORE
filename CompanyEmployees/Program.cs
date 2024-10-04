@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Options;
 using NLog;
+using Presentation.ActionFilters;
 
 
 
@@ -31,6 +32,9 @@ builder.Services.AddControllers(config =>
     config.InputFormatters.Insert(0, builder.Services.GetJsonPatchInputFormatter());
 }).AddXmlDataContractSerializerFormatters().AddCustomCSVFormatter()
 .AddApplicationPart(typeof(Presentation.AssemblyReference).Assembly);
+builder.Services.AddScoped<ValidationFilterAttribute>();
+
+
 
 var app = builder.Build();
 
