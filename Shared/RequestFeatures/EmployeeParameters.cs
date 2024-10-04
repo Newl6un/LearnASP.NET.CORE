@@ -8,6 +8,7 @@ namespace Shared.RequestFeatures
 {
     public class EmployeeParameters : RequestParameters
     {
+        public EmployeeParameters() => OrderBy = "name";
         public uint MaxAge { get; set; } = int.MaxValue;
         public uint MinAge { get; set; }
         public bool ValidAgeRange => MaxAge > MinAge;
