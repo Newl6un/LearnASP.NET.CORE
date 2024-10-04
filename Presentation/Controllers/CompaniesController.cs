@@ -74,6 +74,14 @@ namespace Presentation.Controllers
 
             return NoContent();
         }
+
+        [HttpOptions]
+        public IActionResult GetCompaniesOptions()
+        {
+            Response.Headers["Allow"] = "GET, OPTIONS, POST";
+            return Ok();
+        }
+
     }
 
 }

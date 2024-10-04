@@ -1,4 +1,5 @@
 using CompanyEmployees.Extensions;
+using CompanyEmployees.Utility;
 using Contracts;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
@@ -34,7 +35,10 @@ builder.Services.AddControllers(config =>
     config.InputFormatters.Insert(0, builder.Services.GetJsonPatchInputFormatter());
 }).AddXmlDataContractSerializerFormatters().AddCustomCSVFormatter()
 .AddApplicationPart(typeof(Presentation.AssemblyReference).Assembly);
+builder.Services.AddCustomMediaTypes();
 builder.Services.AddScoped<ValidationFilterAttribute>();
+builder.Services.AddScoped<ValidateMediaTypeAttribute>();
+builder.Services.AddScoped<IEmployeeLinks, EmployeeLinks>();
 builder.Services.AddScoped<IDataShaper<EmployeeDto>, DataShaper<EmployeeDto>>();
 
 
@@ -43,7 +47,7 @@ var app = builder.Build();
 var logger = app.Services.GetRequiredService<ILoggerManager>();
 app.ConfigureExceptionHandler(logger);
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {

@@ -51,7 +51,25 @@ namespace CompanyEmployees.Extensions
                     .GetRequiredService<IOptions<MvcOptions>>().Value.InputFormatters
                     .OfType<NewtonsoftJsonPatchInputFormatter>().First();
 
+        public static void AddCustomMediaTypes(this IServiceCollection services)
+        {
+            services.Configure<MvcOptions>(config =>
+            {
+                var systemTextJsonOutputFormatter = config.OutputFormatters
+                .OfType<SystemTextJsonOutputFormatter>()?.FirstOrDefault();
+                if(systemTextJsonOutputFormatter != null)
+                {
+                    systemTextJsonOutputFormatter.SupportedMediaTypes.Add("application/vnd.newlsun.hateoas+json");
+                }
 
+                var xmlOutputFormatter = config
+                .OfType<XmlDataContractSerializerOutputFormatter>()?.FirstOrDefault();
+                if(xmlOutputFormatter != null)
+                {
+                    xmlOutputFormatter.SupportedMediaTypes.Add("application/vnd.newlsun.hateoas+xml");
+                }
+            });
+        }
 
 
     }
