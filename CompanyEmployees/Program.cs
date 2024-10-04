@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Options;
 using NLog;
 using Presentation.ActionFilters;
+using Service.DataShaping;
+using Shared.DataTransferObjects;
 
 
 
@@ -33,7 +35,7 @@ builder.Services.AddControllers(config =>
 }).AddXmlDataContractSerializerFormatters().AddCustomCSVFormatter()
 .AddApplicationPart(typeof(Presentation.AssemblyReference).Assembly);
 builder.Services.AddScoped<ValidationFilterAttribute>();
-
+builder.Services.AddScoped<IDataShaper<EmployeeDto>, DataShaper<EmployeeDto>>();
 
 
 var app = builder.Build();
