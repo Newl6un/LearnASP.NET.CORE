@@ -60,13 +60,15 @@ namespace CompanyEmployees.Extensions
                 if(systemTextJsonOutputFormatter != null)
                 {
                     systemTextJsonOutputFormatter.SupportedMediaTypes.Add("application/vnd.newlsun.hateoas+json");
+                    systemTextJsonOutputFormatter.SupportedMediaTypes.Add("application/vnd.newlsun.apiroot+json");
                 }
 
-                var xmlOutputFormatter = config
+                var xmlOutputFormatter = config.OutputFormatters
                 .OfType<XmlDataContractSerializerOutputFormatter>()?.FirstOrDefault();
                 if(xmlOutputFormatter != null)
                 {
                     xmlOutputFormatter.SupportedMediaTypes.Add("application/vnd.newlsun.hateoas+xml");
+                    xmlOutputFormatter.SupportedMediaTypes.Add("application/vnd.newlsun.apiroot+xml");
                 }
             });
         }

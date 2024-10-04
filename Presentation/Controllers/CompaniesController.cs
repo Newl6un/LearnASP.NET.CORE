@@ -17,7 +17,7 @@ namespace Presentation.Controllers
             _service = service;
         }
 
-        [HttpGet]
+        [HttpGet(Name = "GetCompanies")]
         public async Task<IActionResult> GetCompanies()
         {
 
@@ -32,7 +32,7 @@ namespace Presentation.Controllers
             return Ok(company);
         }
 
-        [HttpPost]
+        [HttpPost(Name = "CreateCompany")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateCompany([FromBody] CompanyForCreationDto company)
         {
