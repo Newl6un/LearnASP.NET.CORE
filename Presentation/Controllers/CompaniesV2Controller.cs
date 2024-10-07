@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Presentation.Controllers
 {
-    [ApiVersion("2.0", Deprecated = true)]
-    [Route("api/companies")]
-    [ApiController]
+   // [ApiVersion("2.0", Deprecated = true)]
+    //[Route("api/companies")]
+    //[ApiController]
     public class CompaniesV2Controller : ControllerBase
     {
         private readonly IServiceManager _service;

@@ -4,10 +4,11 @@ using Presentation.ActionFilters;
 using Service.Contracts;
 using Shared.DataTransferObjects;
 using Marvin.Cache.Headers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Presentation.Controllers
 {
-    [ApiVersion("1.0")]
+    //[ApiVersion("1.0")]
     [Route("api/companies")]
     [ResponseCache(CacheProfileName = "120SecondsDuration")]
     //[ApiController]
@@ -21,6 +22,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet(Name = "GetCompanies")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetCompanies()
         {
 
