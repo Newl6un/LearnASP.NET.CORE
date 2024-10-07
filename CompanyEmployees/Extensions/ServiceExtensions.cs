@@ -167,6 +167,8 @@ namespace CompanyEmployees.Extensions
                     ValidAudience = jwtSettings["validAudience"],
                     IssuerSigningKey = new
                 SymmetricSecurityKey(Encoding.UTF32.GetBytes(secretKey)),
+                    NameClaimType = "username",
+                    RoleClaimType = "role",
                 };
             });
         }
