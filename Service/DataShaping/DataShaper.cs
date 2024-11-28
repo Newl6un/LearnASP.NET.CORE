@@ -1,22 +1,14 @@
 ﻿using Contracts;
-using Entities;
 using Entities.Models;
-using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Service.DataShaping
 {
     public class DataShaper<T> : IDataShaper<T> where T : class
     {
-        public PropertyInfo[] Properties {  get; set; }
+        public PropertyInfo[] Properties { get; set; }
 
-        public DataShaper() 
+        public DataShaper()
         {
             Properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
         }
@@ -38,11 +30,11 @@ namespace Service.DataShaping
         {
             var requiredProperties = new List<PropertyInfo>();
 
-            if(!string.IsNullOrWhiteSpace(fieldsString))
+            if (!string.IsNullOrWhiteSpace(fieldsString))
             {
                 var fields = fieldsString.Split(',', StringSplitOptions.RemoveEmptyEntries);
 
-                foreach( var field in fields)
+                foreach (var field in fields)
                 {
                     var property = Properties.FirstOrDefault(
                         pi => pi.Name.Equals(field.Trim(), StringComparison.InvariantCultureIgnoreCase));
@@ -50,7 +42,8 @@ namespace Service.DataShaping
                         continue;
                     requiredProperties.Add(property);
                 }
-            }else 
+            }
+            else
                 requiredProperties = Properties.ToList();
 
             return requiredProperties;
@@ -60,7 +53,7 @@ namespace Service.DataShaping
         {
             var shapeData = new List<ShapedEntity>();
 
-            foreach( var entity in entities)
+            foreach (var entity in entities)
             {
                 var shapedObject = FetchDataForEntity(entity, requiredProperties);
                 shapeData.Add(shapedObject);
@@ -73,7 +66,7 @@ namespace Service.DataShaping
         {
             var shapedObject = new ShapedEntity();
 
-            foreach(var property in requiredProperties)
+            foreach (var property in requiredProperties)
             {
                 var objectPropertyValue = property.GetValue(entity);
                 shapedObject.Entity!.TryAdd(property.Name, objectPropertyValue);
@@ -84,6 +77,6 @@ namespace Service.DataShaping
 
             return shapedObject;
         }
-        
+
     }
 }

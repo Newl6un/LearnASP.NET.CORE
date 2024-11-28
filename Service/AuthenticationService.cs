@@ -30,7 +30,7 @@ namespace Service
         private User? _user;
         private readonly JwtConfiguration _jwtConfiguration;
 
-        public AuthenticationService(ILoggerManager logger, IMapper mapper, UserManager<User> userManager, IOptions<JwtConfiguration> configuration )
+        public AuthenticationService(ILoggerManager logger, IMapper mapper, UserManager<User> userManager, IOptions<JwtConfiguration> configuration)
         {
             _logger = logger;
             _mapper = mapper;
@@ -55,7 +55,7 @@ namespace Service
             _user = await _userManager.FindByEmailAsync(userForAuth.UserName);
 
             var result = (_user != null && await _userManager.CheckPasswordAsync(_user, userForAuth.Password));
-            if(!result)
+            if (!result)
                 _logger.LogWarn($"{nameof(ValidateUser)}: Authentication failed. Wrong user name or password.");
             return result;
         }
@@ -67,16 +67,16 @@ namespace Service
             var tokenOptions = GenerateTokenOptions(signingCredentials, claims);
 
             var refreshToken = GenerateRefreshToken();
-           
+
             _user.RefreshToken = refreshToken;
-           
+
             if (populateExp)
                 _user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
-            
+
             await _userManager.UpdateAsync(_user);
-           
+
             var accessToken = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
-            
+
             return new TokenDto(accessToken, refreshToken);
 
         }
@@ -87,7 +87,7 @@ namespace Service
             var key = Encoding.UTF32.GetBytes(Environment.GetEnvironmentVariable("SECRET"));
             _logger.LogInfo($"Key length in bytes: {key.Length * 8} bits");
             var secret = new SymmetricSecurityKey(key);
-            
+
             return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
         }
 
@@ -100,7 +100,7 @@ namespace Service
             };
 
             var roles = await _userManager.GetRolesAsync(_user);
-            foreach(var role in roles)
+            foreach (var role in roles)
             {
                 claims.Add(new Claim("role", role));
             }
@@ -110,7 +110,6 @@ namespace Service
 
         private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims)
         {
-            var jwtSettings = _configuration.GetSection("JwtSettings");
             var tokenOptions = new JwtSecurityToken(
                     issuer: _jwtConfiguration.ValidIssuer,
                     audience: _jwtConfiguration.ValidAudience,
@@ -125,7 +124,7 @@ namespace Service
         private string GenerateRefreshToken()
         {
             var randomNumber = new byte[32];
-            using (var rng = RandomNumberGenerator.Create()) 
+            using (var rng = RandomNumberGenerator.Create())
             {
                 rng.GetBytes(randomNumber);
                 return Convert.ToBase64String(randomNumber);
@@ -134,13 +133,12 @@ namespace Service
 
         private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
         {
-            var jwtSettings = _configuration.GetSection("JwtSettings");
             var tokenValidationParameters = new TokenValidationParameters
             {
                 ValidateAudience = true,
                 ValidateIssuer = true,
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey( Encoding.UTF32.GetBytes(Environment.GetEnvironmentVariable("SECRET"))),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF32.GetBytes(Environment.GetEnvironmentVariable("SECRET"))),
                 ValidateLifetime = true,
                 ValidIssuer = _jwtConfiguration.ValidIssuer,
                 ValidAudience = _jwtConfiguration.ValidAudience,
@@ -153,7 +151,7 @@ namespace Service
             var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
 
             var jwtSecurityToken = securityToken as JwtSecurityToken;
-            if(jwtSecurityToken is null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+            if (jwtSecurityToken is null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
             {
                 throw new SecurityTokenException("Invalid token");
             }

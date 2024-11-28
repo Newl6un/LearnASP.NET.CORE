@@ -3,11 +3,7 @@ using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using Repository.Extensions;
 using Shared.RequestFeatures;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Repository
 {
@@ -34,9 +30,9 @@ namespace Repository
                 .CountAsync();
 
             return new PagedList<Employee>(
-                employees, 
-                count, 
-                employeeParameters.PageNumber, 
+                employees,
+                count,
+                employeeParameters.PageNumber,
                 employeeParameters.PageSize);
         }
         public async Task<Employee?> GetEmployeeAsync(Guid companyId, Guid id, bool trackChanges) =>

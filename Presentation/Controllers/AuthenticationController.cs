@@ -26,7 +26,7 @@ namespace Presentation.Controllers
         public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDto userForRegistration)
         {
             var result = await _service.AuthenticationService.RegisterUser(userForRegistration);
-            if(!result.Succeeded)
+            if (!result.Succeeded)
             {
                 foreach (var error in result.Errors)
                 {
@@ -41,11 +41,11 @@ namespace Presentation.Controllers
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> Authenticate([FromBody] UserForAuthenticationDto user)
         {
-            if(!await _service.AuthenticationService.ValidateUser(user))
+            if (!await _service.AuthenticationService.ValidateUser(user))
                 return Unauthorized();
 
             var tokenDto = await _service.AuthenticationService.CreateToken(populateExp: true);
-            
+
             return Ok(tokenDto);
 
         }
